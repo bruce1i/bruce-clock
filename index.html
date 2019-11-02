@@ -2,31 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bruce Time</title>
+    <title>Bruce Clock</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+        }
+
+        body {
             overflow: hidden;
         }
 
         #app {
+            position: relative;
             box-sizing: border-box;
-            color: white;
-            background-color: #333;
-            width: 60px;
+            border: solid 1px white;
+            width: 78px;
             height: 30px;
             line-height: 30px;
-            text-align: center;
+            color: white;
+            background-color: #333;
+            cursor: default;
             font-family: cursive;
             font-size: 16px;
-            border: solid 1px white;
-            cursor: default;
+        }
+
+        #time {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 55px;
+            height: 100%;
+            z-index: 1;
+            text-align: center;
+        }
+
+        #eye {
+            position: absolute;
+            top: 6px;
+            right: 5px;
+            width: 16px;
+            height: 16px;
+            z-index: 2;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAhQAAAIUB4uz/wQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAOLSURBVEiJ7ZRfSJ5lGMZ/9/P+8fPTqfNTp5vkP2xbnSzIJoxB2iYbTNCTDBZ0FCzmN3VBdRp01ooiglZBEIhFENTYKiLmphsz2oYOo7Kmy1A3Z5lz+un3vu/dwev0+/xDBdHRrsP7fe7rup7rue8X7uP/hNbs37W6Zv4NQf/PWtT3m8bW++bX1F/xvfmrWt9UlVqXDd2omoujySOeytNZlpa4htJMG9sOOxYFBlS4YHz5ZFtjwxssJh+1YrEP5ZvPnvlbgd4b/suJQNvzHM3Jd5VAof934U4SCiIBhREojAgisOV4O+61AYIdD51zPnq3TkA3FOib0IrZOf+8Y2np1kzFEvj2lnB+3JCfEZDrBMsdURsOv95B1uAAicYmJuNxEPkY2zlSsVmm1whcGEs2zCTkVMxVtzAjNNE9ZuidMFTkeERMmjGeeq2D4p8GmDrQxNzxOMgy1Y+BBo1VRZEhWHrk3hvJ/dPzcqYwhfzWvNAzYdgW9dlVAGW5hp7bNsOzFi0nQvKhuia6mltJBGna242YnuHbCzsAzKVRrZ7xOBNz1YplrLjsHgszLooG+BjKsoFAaHu7jZKhAX54vInTLa14CNdn1jzlFlROj/6p+fas53c7InZRJN3G+LwQtQISHnw/DX2TwqsfxKm83s93e5rpPHSMMgl7phJrBwWo9Ba89+xEQHG+q2vGyQtgaSTpHDF0dcapHAnJTx5qx1GAUCAZKOsOpOhek21xbnoxJExFpqUkNWzq6oyzM4VcRYhaK3Fm2uveAEXeMlpmNThGxn+dN2jKoFTlwpwntJzoYOdIP18/1syLT7TjixC1leJMf/lscXQd9yqfVhTYrwjA1WHNm1J/yDZa8EBUEYGkgnmug/Jf+hmqa+LzllYmFyxsgQJ3ZR82ObCvVDBpGvqFN+02V1fLwnL57C3N1jnvsqo8WJYVsPX5cEMv72nm1JNx8iLpe3Avmr0lwiYnJXZ4/26Bc/RhkUVI+dnVFclsfbmz3bU4md/Wru61cEPtl1qxbcPEvEXCD/04BqpyQufL5MqUoIfLC91n75EvCabDr6m/osnFR6b3HZgYPPpCXixCJMsGP4CbCSHDUvLd1MXlJug7xnHfLMuTP1bzpSdX27Dbv3vnksnN/Up6vzzYPawZlvGOOUJtpsNmVzSSISwawwTIYCBcrIzZZ0XEX028IXT3wdp/fPg+/gv8BfLqW6xh4ANqAAAAAElFTkSuQmCC);
+            background-repeat: no-repeat;
+            background-size: cover;
         }
     </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+    <div id="time"></div>
+    <div id="eye"></div>
+</div>
 <script src="index.js"></script>
 </body>
 </html>

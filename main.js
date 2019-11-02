@@ -20,7 +20,7 @@ function createTray() {
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'v1.0.0'
+            label: 'v1.0.1'
         },
         {
             label: 'Quit',
@@ -35,31 +35,35 @@ function createTray() {
         createIndexWin()
     }
 
-    tray.setToolTip('Bruce Time')
+    tray.setToolTip('Bruce Clock')
     tray.setContextMenu(contextMenu)
     tray.on('click', onLeftClick)
 }
 
 function createIndexWin() {
     if (indexWin) {
-        indexWin.show()
+        indexWin.showInactive()
     } else {
         const screenDisplay = screen.getPrimaryDisplay()
 
         indexWin = new BrowserWindow({
-            width: 60,
+            width: 78,
             height: 30,
-            x: screenDisplay.size.width - 60,
+            // width: 800,
+            // height: 600,
+            x: screenDisplay.size.width - 78,
             y: 0,
             frame: false,
             resizable: false,
             alwaysOnTop: true,
             transparent: true,
+            skipTaskbar: true,
             webPreferences: {
                 nodeIntegration: true
             }
         })
         indexWin.loadFile('index.html')
+        // indexWin.webContents.openDevTools() // 关闭开发者工具窗口才可以窗体透明
     }
 }
 
@@ -97,6 +101,14 @@ function handleMainProcess() {
 
     ipcMain.on('close-index-win', () => {
         destroyIndexWin()
+    })
+
+    ipcMain.on('hide-index-win', () => {
+        indexWin.hide()
+
+        setTimeout(() => {
+            indexWin.showInactive()
+        }, 5 * ONE_SECOND)
     })
 }
 
