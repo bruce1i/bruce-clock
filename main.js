@@ -25,14 +25,14 @@ function createTray() {
         {
             label: 'Quit',
             click: () => {
-                indexWin = null
                 clearInterval(timerId)
+                closeIndexWin()
                 app.quit()
             }
         }
     ])
     const onLeftClick = () => {
-        createIndexWin()
+        showIndexWin()
     }
 
     tray.setToolTip('Bruce Clock')
@@ -40,7 +40,7 @@ function createTray() {
     tray.on('click', onLeftClick)
 }
 
-function createIndexWin() {
+function showIndexWin() {
     if (indexWin) {
         indexWin.showInactive()
     } else {
@@ -67,9 +67,11 @@ function createIndexWin() {
     }
 }
 
-function destroyIndexWin() {
-    indexWin.destroy()
-    indexWin = null
+function closeIndexWin() {
+    if (indexWin) {
+        indexWin.destroy()
+        indexWin = null
+    }
 }
 
 function generateCheckingTime() {
@@ -88,7 +90,7 @@ function startLoopingTip() {
 
     timerId = setInterval(() => {
         if (Date.now() >= checkingTime.getTime()) {
-            createIndexWin()
+            showIndexWin()
             generateCheckingTime()
         }
     }, LOOP_TIME)
@@ -96,11 +98,11 @@ function startLoopingTip() {
 
 function handleMainProcess() {
     createTray()
-    createIndexWin()
+    showIndexWin()
     startLoopingTip()
 
     ipcMain.on('close-index-win', () => {
-        destroyIndexWin()
+        closeIndexWin()
     })
 
     ipcMain.on('hide-index-win', () => {
