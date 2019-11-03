@@ -1,9 +1,16 @@
 const {ipcRenderer} = require('electron')
 const ONE_SECOND = 1000
+const monthList = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.']
 const $app = document.getElementById('app')
 const $time = document.getElementById('time')
 const $eye = document.getElementById('eye')
 let timerId
+
+function getCurrentDateString() {
+    const currDate = new Date()
+
+    return `${monthList[currDate.getMonth()]} ${currDate.getDate()}`
+}
 
 function getCurrentTimeString() {
     const currDate = new Date()
@@ -11,19 +18,41 @@ function getCurrentTimeString() {
     return `${currDate.getHours()}:${String(currDate.getMinutes()).padStart(2, '0')}`
 }
 
+function showDate() {
+    clearTimeout(timerId)
+    $app.classList.add('date')
+    $time.innerHTML = getCurrentDateString()
+
+    timerId = setTimeout(showTime, 3 * ONE_SECOND)
+}
+
 function showTime() {
+    clearTimeout(timerId)
+    $app.classList.remove('date')
     $time.innerHTML = getCurrentTimeString()
 
     timerId = setTimeout(showTime, 10 * ONE_SECOND)
 }
 
-showTime()
-
-$app.onclick = () => {
+function closeWin() {
     clearTimeout(timerId)
     ipcRenderer.send('close-index-win')
 }
 
-$eye.onmouseenter = () => {
+function hideWin() {
     ipcRenderer.send('hide-index-win')
+}
+
+showTime()
+
+$app.onclick = () => {
+    showDate()
+}
+
+$app.oncontextmenu = () => {
+    closeWin()
+}
+
+$eye.onmouseenter = () => {
+    hideWin()
 }

@@ -12,22 +12,21 @@ const ONE_SECOND = 1000
 const LOOP_TIME = 10 * ONE_SECOND
 let indexWin
 let tray
-let timerId
+let mainTimerId
 let checkingTime
+let hideTimerId
 
 function createTray() {
     tray = new Tray(path.join(__dirname, '/assets/tray-icon.png'))
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'v1.0.1'
+            label: 'v1.1.0'
         },
         {
             label: 'Quit',
             click: () => {
-                clearInterval(timerId)
-                closeIndexWin()
-                app.quit()
+                quitApp()
             }
         }
     ])
@@ -47,10 +46,10 @@ function showIndexWin() {
         const screenDisplay = screen.getPrimaryDisplay()
 
         indexWin = new BrowserWindow({
-            width: 78,
-            height: 30,
             // width: 800,
             // height: 600,
+            width: 78,
+            height: 30,
             x: screenDisplay.size.width - 78,
             y: 0,
             frame: false,
@@ -64,6 +63,18 @@ function showIndexWin() {
         })
         indexWin.loadFile('index.html')
         // indexWin.webContents.openDevTools() // 关闭开发者工具窗口才可以窗体透明
+    }
+}
+
+function hideIndexWin() {
+    clearTimeout(hideTimerId)
+
+    if (indexWin) {
+        indexWin.hide()
+
+        hideTimerId = setTimeout(() => {
+            indexWin.showInactive()
+        }, 5 * ONE_SECOND)
     }
 }
 
@@ -88,7 +99,7 @@ function generateCheckingTime() {
 function startLoopingTip() {
     generateCheckingTime()
 
-    timerId = setInterval(() => {
+    mainTimerId = setInterval(() => {
         if (Date.now() >= checkingTime.getTime()) {
             showIndexWin()
             generateCheckingTime()
@@ -106,12 +117,15 @@ function handleMainProcess() {
     })
 
     ipcMain.on('hide-index-win', () => {
-        indexWin.hide()
-
-        setTimeout(() => {
-            indexWin.showInactive()
-        }, 5 * ONE_SECOND)
+        hideIndexWin()
     })
+}
+
+function quitApp() {
+    clearInterval(mainTimerId)
+    clearTimeout(hideTimerId)
+    closeIndexWin()
+    app.quit()
 }
 
 app.on('ready', handleMainProcess)
