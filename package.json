@@ -1,6 +1,6 @@
 {
   "name": "bruce-clock",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "build": {
-    "appId": "bruceStudio.public.bruceClock.v1",
+    "appId": "bruceStudio.public.bruceClock.v1.2",
     "win": {
       "target": "portable",
       "icon": "assets/app-icon.png",

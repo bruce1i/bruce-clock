@@ -43,10 +43,19 @@ function hideWin() {
     ipcRenderer.send('hide-index-win')
 }
 
+function toggleGhostWin() {
+    $app.classList.toggle('ghost')
+    showTime()
+}
+
 showTime()
 
 $app.onclick = () => {
     showDate()
+}
+
+$app.ondblclick = () => {
+    toggleGhostWin()
 }
 
 $app.oncontextmenu = () => {

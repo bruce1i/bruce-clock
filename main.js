@@ -21,7 +21,7 @@ function createTray() {
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'v1.1.0'
+            label: 'v1.2.0'
         },
         {
             label: 'Quit',
