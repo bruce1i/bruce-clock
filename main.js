@@ -8,6 +8,7 @@ const {
 } = require('electron')
 const path = require('path')
 
+const VERSION = 'v1.2.1'
 const ONE_SECOND = 1000
 const LOOP_TIME = 10 * ONE_SECOND
 let indexWin
@@ -21,7 +22,7 @@ function createTray() {
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'v1.2.0'
+            label: VERSION
         },
         {
             label: 'Quit',
@@ -61,8 +62,15 @@ function showIndexWin() {
                 nodeIntegration: true
             }
         })
-        indexWin.loadFile('index.html')
         // indexWin.webContents.openDevTools() // 关闭开发者工具窗口才可以窗体透明
+
+        indexWin.on('minimize', () => {
+            setTimeout(() => {
+                indexWin.show()
+            }, 0)
+        })
+
+        indexWin.loadFile('index.html')
     }
 }
 
