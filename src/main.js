@@ -1,51 +1,51 @@
 const {
     app,
     BrowserWindow,
-    Tray,
-    Menu,
     ipcMain,
     screen
 } = require('electron')
-const path = require('path')
+const tray = require('./tray')
+const startup = require('./startup')
 
-const VERSION = 'v1.2.2'
 const ONE_SECOND = 1000
 const LOOP_TIME = 10 * ONE_SECOND
 const INDEX_WIN_WIDTH = 78
 const INDEX_WIN_HEIGHT = 30
 let indexWin
-let tray
 let mainTimerId
 let checkingTime
 let hideTimerId
 let moveTimerId
 
-function createTray() {
-    tray = new Tray(path.join(__dirname, '/assets/tray-icon.png'))
+function startupCheck() {
+    startup.repairStartup()
+}
 
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: VERSION
-        },
-        {
-            label: 'Quit',
-            click: () => {
-                quitApp()
-            }
-        }
-    ])
-    const onLeftClick = () => {
-        showIndexWin()
+function createTray() {
+    tray.create()
+
+    tray.item('startup').checked = startup.checkStartup()
+    tray.item('startup').click = (item) => {
+        startup.setStartup(item.checked)
     }
 
-    tray.setToolTip('Bruce Clock')
-    tray.setContextMenu(contextMenu)
-    tray.on('click', onLeftClick)
+    tray.item('quit').click = () => {
+        quitApp()
+    }
+
+    tray.on('click', () => {
+        showIndexWin()
+    })
+
+    tray.refresh()
 }
 
 function showIndexWin() {
     if (indexWin) {
         indexWin.showInactive()
+        indexWin.setAlwaysOnTop(true)
+        indexWin.setSkipTaskbar(true)
+        // indexWin.moveTop()
     } else {
         const {size} = screen.getPrimaryDisplay()
         const x = size.width - INDEX_WIN_WIDTH
@@ -84,7 +84,7 @@ function showIndexWin() {
             restoreIndexWinToDefaultPosition()
         })
 
-        indexWin.loadFile('index.html')
+        indexWin.loadFile('src/windows/index.html')
     }
 }
 
@@ -95,7 +95,8 @@ function hideIndexWin() {
         indexWin.hide()
 
         hideTimerId = setTimeout(() => {
-            indexWin.showInactive()
+            // indexWin.showInactive()
+            showIndexWin()
         }, 5 * ONE_SECOND)
     }
 }
@@ -154,6 +155,7 @@ function startLoopingTip() {
 }
 
 function handleMainProcess() {
+    startupCheck()
     createTray()
     showIndexWin()
     startLoopingTip()
